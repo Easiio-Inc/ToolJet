@@ -10,6 +10,8 @@ import { AppImportExportService } from '@services/app_import_export.service';
 import { User } from 'src/decorators/user.decorator';
 import { AppUpdateDto } from '@dto/app-update.dto';
 import { VersionCreateDto } from '@dto/version-create.dto';
+import { AuthService } from '@services/auth.service';
+import { AppAuthSflowDto } from '@dto/app-authentication.dto';
 
 @Controller('apps')
 export class AppsController {
@@ -17,7 +19,8 @@ export class AppsController {
     private appsService: AppsService,
     private appImportExportService: AppImportExportService,
     private foldersService: FoldersService,
-    private appsAbilityFactory: AppsAbilityFactory
+    private appsAbilityFactory: AppsAbilityFactory,
+    private authService: AuthService
   ) {}
 
   @UseGuards(JwtAuthGuard)
@@ -182,6 +185,45 @@ export class AppsController {
   @UseGuards(JwtAuthGuard)
   @Get()
   async index(@User() user, @Query() query) {
+    const page = query.page;
+    const folderId = query.folder;
+    const searchKey = query.searchKey || '';
+
+    let apps = [];
+    let totalFolderCount = 0;
+
+    if (folderId) {
+      const folder = await this.foldersService.findOne(folderId);
+      apps = await this.foldersService.getAppsFor(user, folder, page, searchKey);
+      totalFolderCount = await this.foldersService.userAppCount(user, folder, searchKey);
+    } else {
+      apps = await this.appsService.all(user, page, searchKey);
+    }
+
+    const totalCount = await this.appsService.count(user, searchKey);
+
+    const totalPageCount = folderId ? totalFolderCount : totalCount;
+
+    const meta = {
+      total_pages: Math.ceil(totalPageCount / 10),
+      total_count: totalCount,
+      folder_count: totalFolderCount,
+      current_page: parseInt(page || 1),
+    };
+
+    const response = {
+      meta,
+      apps,
+    };
+
+    return decamelizeKeys(response);
+  }
+
+  @Post('/sflow')
+  async indexSflow(@Body() appAuthDto: AppAuthSflowDto, @Query() query) {
+    const user = await this.authService.sflowauth1(appAuthDto.userId, appAuthDto.apiKey);
+    user.organizationId = user.defaultOrganizationId;
+
     const page = query.page;
     const folderId = query.folder;
     const searchKey = query.searchKey || '';

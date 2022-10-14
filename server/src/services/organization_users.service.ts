@@ -35,7 +35,7 @@ export class OrganizationUsersService {
           organization,
           invitationToken: isInvite ? uuid.v4() : null,
           status: isInvite ? 'invited' : 'active',
-          role: 'all-users',
+          role: 'all_users',
           createdAt: new Date(),
           updatedAt: new Date(),
         })

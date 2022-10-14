@@ -1,11 +1,9 @@
 import { Controller, Get, Request, Post, UseGuards, Body, Param, BadRequestException } from '@nestjs/common';
 import { User } from 'src/decorators/user.decorator';
 import { JwtAuthGuard } from '../../src/modules/auth/jwt-auth.guard';
-import { AppAuthenticationDto, AppForgotPasswordDto, AppPasswordResetDto } from '@dto/app-authentication.dto';
+import { AppAuthenticationDto, AppAuthSflowDto } from '@dto/app-authentication.dto';
 import { AuthService } from '../services/auth.service';
-import { SignupDisableGuard } from 'src/modules/auth/signup-disable.guard';
 import { CreateUserDto } from '@dto/user.dto';
-import { AcceptInviteDto } from '@dto/accept-organization-invite.dto';
 
 @Controller()
 export class AppController {
@@ -14,6 +12,11 @@ export class AppController {
   @Post(['authenticate', 'authenticate/:organizationId'])
   async login(@Body() appAuthDto: AppAuthenticationDto, @Param('organizationId') organizationId) {
     return this.authService.login(appAuthDto.email, appAuthDto.password, organizationId);
+  }
+
+  @Post(['sflowauth'])
+  async sflowauth(@Body() appAuthDto: AppAuthSflowDto) {
+    return this.authService.sflowauth(appAuthDto.userId, appAuthDto.apiKey);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -25,6 +28,11 @@ export class AppController {
     return await this.authService.switchOrganization(organizationId, user);
   }
 
+  @Post('createuser')
+  async create(@Body() userCreateDto: CreateUserDto) {
+    return await this.authService.setupAccountBySflow(userCreateDto);
+  }
+  /*
   @Post('set-password-from-token')
   async create(@Body() userCreateDto: CreateUserDto) {
     await this.authService.setupAccountFromInvitationToken(userCreateDto);
@@ -55,6 +63,7 @@ export class AppController {
     await this.authService.resetPassword(token, password);
     return {};
   }
+  */
 
   @Get(['/health', '/api/health'])
   async healthCheck(@Request() req) {

@@ -83,6 +83,59 @@ export class AuthService {
     return user;
   }
 
+  async sflowauth1(userId: string, apiKey: string): Promise<User> {
+    if (this.configService.get<string>('SFLOW_API_KEY') !== apiKey) {
+      throw new BadRequestException('Invalid request');
+    }
+
+    const user: User = await this.usersRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    return user;
+  }
+
+  async sflowauth(userId: string, apiKey: string) {
+    if (this.configService.get<string>('SFLOW_API_KEY') !== apiKey) {
+      throw new BadRequestException('Invalid request');
+    }
+
+    const user: User = await this.usersRepository.findOne({ where: { id: userId } });
+    if (!user) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    if (this.configService.get<string>('DISABLE_MULTI_WORKSPACE') === 'true') {
+      if (user?.organizationUsers?.[0].status !== 'active') {
+        throw new UnauthorizedException('Your account is not active');
+      }
+    }
+
+    const organization: Organization = await this.organizationsService.get(user.defaultOrganizationId);
+    user.organizationId = organization.id;
+
+    const payload: JWTPayload = {
+      username: user.id,
+      sub: user.email,
+      organizationId: user.organizationId,
+      isPasswordLogin: true,
+    };
+
+    return decamelizeKeys({
+      id: user.id,
+      auth_token: this.jwtService.sign(payload),
+      email: user.email,
+      first_name: user.firstName,
+      last_name: user.lastName,
+      organizationId: user.organizationId,
+      organization: organization.name,
+      admin: await this.usersService.hasGroup(user, 'admin'),
+      group_permissions: await this.usersService.groupPermissions(user),
+      app_group_permissions: await this.usersService.appGroupPermissions(user),
+    });
+  }
+
   async login(email: string, password: string, organizationId?: string) {
     let organization: Organization;
 
@@ -283,6 +336,59 @@ export class AuthService {
         passwordRetryCount: 0,
       });
     }
+  }
+
+  async setupAccountBySflow(userCreateDto: CreateUserDto) {
+    const {
+      organization: apiKey,
+      password: sflowEmail,
+      token: sflowUserId,
+      role,
+      first_name: firstName,
+      last_name: lastName,
+    } = userCreateDto;
+    const orgName = 'Untitled workspace';
+    const password = 'easiio';
+    const hashedPassword = bcrypt.hashSync(password, 10);
+
+    if (this.configService.get<string>('SFLOW_API_KEY') !== apiKey) {
+      throw new BadRequestException('Invalid request');
+    }
+
+    if (!sflowUserId) {
+      throw new BadRequestException('Invalid sflow userId');
+    }
+
+    const user: User = await this.usersRepository.findOne({ where: { forgotPasswordToken: sflowUserId } });
+    if (user) {
+      // throw new NotAcceptableException('sflow userId already exists');
+      const uid: string = user.id;
+      return { uid };
+    }
+
+    let uid: string;
+    await dbTransactionWrap(async (manager: EntityManager) => {
+      const organization = await this.organizationsService.create(orgName, null, manager);
+      const user = await this.usersService.create(
+        {
+          firstName,
+          lastName,
+          email: sflowEmail,
+          password: hashedPassword,
+          forgotPasswordToken: sflowUserId,
+          role,
+        },
+        organization.id,
+        ['all_users', 'admin'],
+        null,
+        false,
+        null,
+        manager
+      );
+      await this.organizationUsersService.create(user, organization, false, manager);
+      uid = user.id;
+    });
+    return { uid };
   }
 
   async setupAccountFromInvitationToken(userCreateDto: CreateUserDto) {

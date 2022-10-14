@@ -67,7 +67,7 @@ export class UsersService {
   ): Promise<User> {
     const password = uuid.v4();
 
-    const { email, firstName, lastName } = userParams;
+    const { email, firstName, lastName, role, forgotPasswordToken } = userParams;
     let user: User;
 
     await dbTransactionWrap(async (manager: EntityManager) => {
@@ -78,9 +78,11 @@ export class UsersService {
           lastName,
           password,
           invitationToken: isInvite ? uuid.v4() : null,
+          forgotPasswordToken,
           defaultOrganizationId: defaultOrganizationId || organizationId,
           createdAt: new Date(),
           updatedAt: new Date(),
+          role,
         });
         await manager.save(user);
       } else {

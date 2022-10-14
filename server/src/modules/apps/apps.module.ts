@@ -27,6 +27,14 @@ import { DataSourcesService } from '@services/data_sources.service';
 import { CredentialsService } from '@services/credentials.service';
 import { EncryptionService } from '@services/encryption.service';
 import { Credential } from 'src/entities/credential.entity';
+import { JwtModule } from '@nestjs/jwt';
+import { ConfigService } from '@nestjs/config';
+import { SSOConfigs } from 'src/entities/sso_config.entity';
+import { AuthService } from '@services/auth.service';
+import { EmailService } from '@services/email.service';
+import { OrganizationsService } from '@services/organizations.service';
+import { OrganizationUsersService } from '@services/organization_users.service';
+import { GroupPermissionsService } from '@services/group_permissions.service';
 
 @Module({
   imports: [
@@ -46,8 +54,20 @@ import { Credential } from 'src/entities/credential.entity';
       UserGroupPermission,
       Credential,
       File,
+      SSOConfigs,
     ]),
     CaslModule,
+    JwtModule.registerAsync({
+      useFactory: (config: ConfigService) => {
+        return {
+          secret: config.get<string>('SECRET_KEY_BASE'),
+          signOptions: {
+            expiresIn: config.get<string | number>('JWT_EXPIRATION_TIME') || '30d',
+          },
+        };
+      },
+      inject: [ConfigService],
+    }),
   ],
   providers: [
     AppsService,
@@ -59,6 +79,11 @@ import { Credential } from 'src/entities/credential.entity';
     CredentialsService,
     EncryptionService,
     FilesService,
+    AuthService,
+    EmailService,
+    OrganizationsService,
+    OrganizationUsersService,
+    GroupPermissionsService,
   ],
   controllers: [AppsController, AppUsersController],
 })

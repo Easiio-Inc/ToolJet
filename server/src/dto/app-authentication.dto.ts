@@ -1,4 +1,4 @@
-import { IsEmail, IsNotEmpty, IsOptional, IsString } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 import { lowercaseString } from 'src/helpers/utils.helper';
 import { Transform } from 'class-transformer';
 
@@ -36,4 +36,12 @@ export class AppPasswordResetDto {
   @IsString()
   @IsNotEmpty()
   token: string;
+}
+
+export class AppAuthSflowDto {
+  @IsUUID()
+  apiKey: string;
+
+  @IsUUID()
+  userId: string;
 }

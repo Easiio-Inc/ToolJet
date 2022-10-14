@@ -13,9 +13,14 @@ import { bootstrap as globalAgentBootstrap } from 'global-agent';
 const fs = require('fs');
 
 globalThis.TOOLJET_VERSION = fs.readFileSync('./.version', 'utf8').trim();
+const httpsOptions = {
+  key: fs.readFileSync('/app/xm.easiio.cn.key'),
+  cert: fs.readFileSync('/app/xm.easiio.cn.crt'),
+};
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule, {
+    httpsOptions,
     bufferLogs: true,
     abortOnError: false,
   });
