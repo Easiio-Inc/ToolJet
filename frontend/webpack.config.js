@@ -10,8 +10,8 @@ const environment = process.env.NODE_ENV === 'production' ? 'production' : 'deve
 const API_URL = {
   // production: process.env.TOOLJET_SERVER_URL || (process.env.SERVE_CLIENT !== 'false' ? '__REPLACE_SUB_PATH__' : ''),
   // development: `http://localhost:${process.env.TOOLJET_SERVER_PORT || 3000}`,
-  production: 'https://xm.eioapi.com:3000',
-  development: 'https://xm.eioapi.com:3000/'
+  production: 'https://xm.easiio.cn:3000',
+  development: 'https://xm.easiio.cn:3000'
 };
 // console.log('process', process.env)
 const ASSET_PATH = process.env.ASSET_PATH || '';
@@ -150,7 +150,8 @@ module.exports = {
       SERVER_IP: process.env.SERVER_IP,
       COMMENT_FEATURE_ENABLE: true,
       ENABLE_MULTIPLAYER_EDITING: true,
-      API_KEY: process.env.API_KEY
+      API_KEY: process.env.API_KEY,
+      TOOLJET_HOST: API_URL[environment]
     }),
   },
 };

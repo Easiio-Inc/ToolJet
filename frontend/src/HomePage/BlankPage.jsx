@@ -33,7 +33,7 @@ export const BlankPage = function BlankPage({
                 style={{ color: darkMode && '#ffffff' }}
                 data-cy="empty-welcome-header"
               >
-                {t('blankPage.welcomeToToolJet', 'Welcome to Easiio!')}
+                {t('blankPage.welcomeToToolJet', 'Welcome to sflow.io !')}
               </h3>
               <p className={`empty-title ${darkMode && 'text-white-50'}`} data-cy="empty-description">
                 {t(

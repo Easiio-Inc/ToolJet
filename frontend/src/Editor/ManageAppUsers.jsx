@@ -9,7 +9,7 @@ import { debounce } from 'lodash';
 import Textarea from '@/_ui/Textarea';
 import { withTranslation } from 'react-i18next';
 import { Link } from 'react-router-dom';
-
+import config from 'config';
 class ManageAppUsersComponent extends React.Component {
   constructor(props) {
     super(props);
@@ -118,6 +118,13 @@ class ManageAppUsersComponent extends React.Component {
   render() {
     const { isLoading, app, slugError, isSlugVerificationInProgress } = this.state;
     const appId = app.id;
+    if (window.public_config && config) {
+      window.public_config = {
+        ...window.public_config,
+        ...config,
+      };
+    }
+
     const appLink = `${window.public_config?.TOOLJET_HOST}/applications/`;
     const shareableLink = appLink + (this.props.slug || appId);
     const slugButtonClass = isSlugVerificationInProgress ? '' : slugError !== null ? 'is-invalid' : 'is-valid';
