@@ -13,6 +13,7 @@ const currentUserSubject = new BehaviorSubject(JSON.parse(localStorage.getItem('
 
 export const authenticationService = {
   login,
+  sflogin,
   getOrganizationConfigs,
   logout,
   clearUser,
@@ -36,8 +37,22 @@ function login(email, password, organizationId) {
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify({ email, password }),
   };
-
   return fetch(`${config.apiUrl}/authenticate${organizationId ? `/${organizationId}` : ''}`, requestOptions)
+    .then(handleResponseWithoutValidation)
+    .then((user) => {
+      // store user details and jwt token in local storage to keep user logged in between page refreshes
+      updateUser(user);
+      return user;
+    });
+}
+
+function sflogin(email, password, organizationId) {
+  const requestOptions = {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ apiKey: email, userId: password }),
+  };
+  return fetch(`${config.apiUrl}/sflowauth${organizationId ? `/${organizationId}` : ''}`, requestOptions)
     .then(handleResponseWithoutValidation)
     .then((user) => {
       // store user details and jwt token in local storage to keep user logged in between page refreshes

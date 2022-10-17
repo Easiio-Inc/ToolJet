@@ -67,3 +67,25 @@ div[data-disabled='true'] {
     width: 100%;
   }
 }
+.sf-applications {}
+
+body::-webkit-scrollbar {
+  width: 10px;
+  height: 4px;
+  border-radius: 3px;
+  background-color: #eee;
+}
+
+body::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+  background: rgba(0, 0, 0, 0.2);
+  cursor: pointer;
+}
+
+body::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.1);
+  border-radius: 0;
+  background: rgba(0, 0, 0, 0.1);
+  background: white;
+}

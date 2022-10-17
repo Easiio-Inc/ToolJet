@@ -48,6 +48,27 @@ class HomePageComponent extends React.Component {
   }
 
   componentDidMount() {
+    if (
+      this.props.location &&
+      typeof this.props.location.search === 'string' &&
+      this.props.location.search.length > 1
+    ) {
+      const searchText = this.props.location.search.slice(1);
+      const paramsArr = searchText.split('&');
+      const paramsObj = {};
+      paramsArr.forEach((param) => {
+        if (typeof param === 'string' && param.indexOf('=')) {
+          const paramArr = param.split('=');
+          paramsObj[paramArr[0]] = paramArr[1];
+        }
+      });
+      console.log('paramsObj------', paramsObj);
+
+      if (paramsObj.mode === 'create') {
+        this.createApp();
+      }
+    }
+
     this.fetchApps(1, this.state.currentFolder.id);
     this.fetchFolders();
   }

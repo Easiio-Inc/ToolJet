@@ -155,7 +155,7 @@ class EditorComponent extends React.Component {
   }
 
   setWindowTitle(name) {
-    document.title = name ? `${name} - Tooljet` : `Untitled App - Tooljet`;
+    document.title = name ? `${name} - Easiio Sflow` : `Untitled App - Easiio Sflow`;
   }
 
   componentDidMount() {
@@ -240,7 +240,7 @@ class EditorComponent extends React.Component {
   }
 
   componentWillUnmount() {
-    document.title = 'Tooljet - Dashboard';
+    document.title = 'Easiio Sflow - Dashboard';
     this.socket && this.socket?.close();
     if (config.ENABLE_MULTIPLAYER_EDITING) this.props?.provider?.disconnect();
   }
@@ -1220,9 +1220,10 @@ class EditorComponent extends React.Component {
                 <span className="navbar-toggler-icon"></span>
               </button>
               <h1 className="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0">
-                <Link to={'/'} data-cy="editor-page-logo">
-                  <Logo />
-                </Link>
+                {/* <Link to={'/'} data-cy="editor-page-logo">
+                
+                </Link> */}
+                <Logo />
               </h1>
               {this.state.app && (
                 <div className={`app-name input-icon ${this.props.darkMode ? 'dark' : ''}`}>

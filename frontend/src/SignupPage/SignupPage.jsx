@@ -87,7 +87,7 @@ class SignupPageComponent extends React.Component {
             {!signupSuccess && (
               <div className="card-body">
                 <h2 className="card-title text-center mb-4">
-                  {this.props.t('loginSignupPage.createToolJetAccount', 'Create a ToolJet account')}
+                  {this.props.t('loginSignupPage.createToolJetAccount', 'Create a Easiio Sflow account')}
                 </h2>
                 {this.ssoConfigs.enableSignUp && (
                   <div className="d-flex flex-column align-items-center separator-bottom">

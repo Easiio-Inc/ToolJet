@@ -287,11 +287,11 @@ export const Organization = function Organization({ darkMode }) {
             )}
           </div>
         </div>
-        {!isSingleOrganization && (
+        {/* {!isSingleOrganization && (
           <div className="dropdown-item org-actions">
             <div onClick={showCreateModal}>{t('header.organization.menus.addWorkspace', 'Add workspace')}</div>
           </div>
-        )}
+        )} */}
         <div className="dropdown-divider"></div>
         {admin && (
           <>
@@ -301,9 +301,9 @@ export const Organization = function Organization({ darkMode }) {
             <Link data-tesid="settingsBtn" to="/groups" className="dropdown-item" data-cy="manage-groups">
               {t('header.organization.menus.menusList.manageGroups', 'Manage Groups')}
             </Link>
-            <Link data-tesid="settingsBtn" to="/manage-sso" className="dropdown-item" data-cy="manage-sso">
+            {/* <Link data-tesid="settingsBtn" to="/manage-sso" className="dropdown-item" data-cy="manage-sso">
               {t('header.organization.menus.menusList.manageSso', 'Manage SSO')}
-            </Link>
+            </Link> */}
           </>
         )}
         <Link data-tesid="settingsBtn" to="/manage-environment-vars" className="dropdown-item">

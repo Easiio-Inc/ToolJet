@@ -55,7 +55,7 @@ class OnboardingModalComponent extends React.Component {
       >
         <Modal.Header>
           <Modal.Title className="text-center">
-            {this.props.t('onBoarding.finishToolJetInstallation', 'Finish ToolJet installation')}
+            {this.props.t('onBoarding.finishToolJetInstallation', 'Finish Easiio Sflow Dashboard installation')}
           </Modal.Title>
           <br />
         </Modal.Header>
@@ -105,7 +105,7 @@ class OnboardingModalComponent extends React.Component {
           <small>
             {this.props.t(
               'onBoarding.receiveUpdatesFromToolJet',
-              'You will receive updates from the ToolJet team ( 1-2 emails every month, we do not spam )'
+              'You will receive updates from the Easiio team ( 1-2 emails every month, we do not spam )'
             )}
           </small>
         </Modal.Body>

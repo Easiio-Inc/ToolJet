@@ -3,14 +3,17 @@ const webpack = require('webpack');
 const path = require('path');
 const CompressionPlugin = require('compression-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+require('dotenv').config()
 
 const environment = process.env.NODE_ENV === 'production' ? 'production' : 'development';
 
 const API_URL = {
-  production: process.env.TOOLJET_SERVER_URL || (process.env.SERVE_CLIENT !== 'false' ? '__REPLACE_SUB_PATH__' : ''),
-  development: `http://localhost:${process.env.TOOLJET_SERVER_PORT || 3000}`,
+  // production: process.env.TOOLJET_SERVER_URL || (process.env.SERVE_CLIENT !== 'false' ? '__REPLACE_SUB_PATH__' : ''),
+  // development: `http://localhost:${process.env.TOOLJET_SERVER_PORT || 3000}`,
+  production: 'https://xm.eioapi.com:3000',
+  development: 'https://xm.eioapi.com:3000/'
 };
-
+// console.log('process', process.env)
 const ASSET_PATH = process.env.ASSET_PATH || '';
 
 function stripTrailingSlash(str) {
@@ -147,6 +150,7 @@ module.exports = {
       SERVER_IP: process.env.SERVER_IP,
       COMMENT_FEATURE_ENABLE: true,
       ENABLE_MULTIPLAYER_EDITING: true,
+      API_KEY: process.env.API_KEY
     }),
   },
 };
