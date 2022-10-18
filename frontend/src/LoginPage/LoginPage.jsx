@@ -25,13 +25,13 @@ class LoginPageComponent extends React.Component {
 
   componentDidMount() {
     authenticationService.deleteLoginOrganizationId();
-    if (
-      (!this.organizationId && authenticationService.currentUserValue) ||
-      (this.organizationId && authenticationService?.currentUserValue?.organization_id === this.organizationId)
-    ) {
-      // redirect to home if already logged in
-      return this.props.history.push('/');
-    }
+    // if (
+    //   (!this.organizationId && authenticationService.currentUserValue) ||
+    //   (this.organizationId && authenticationService?.currentUserValue?.organization_id === this.organizationId)
+    // ) {
+    //   // redirect to home if already logged in
+    //   return this.props.history.push('/');
+    // }
     if (this.organizationId || this.single_organization) {
       authenticationService.saveLoginOrganizationId(this.organizationId);
       authenticationService.getOrganizationConfigs(this.organizationId).then(
@@ -115,6 +115,7 @@ class LoginPageComponent extends React.Component {
         // }, () => {
         //   this.authUser()
         // })
+        window.localStorage.setItem('oldtid', paramsObj.tooljetId);
         this.sflowAuthUser({
           apikey: config.API_KEY,
           userid: paramsObj.tooljetId,
@@ -165,8 +166,18 @@ class LoginPageComponent extends React.Component {
   authSuccessHandler = () => {
     authenticationService.deleteLoginOrganizationId();
     const params = queryString.parse(this.props.location.search);
+    // console.log('params--------', params)
     const { from } = params.redirectTo ? { from: { pathname: params.redirectTo } } : { from: { pathname: '/' } };
-    const redirectPath = from.pathname === '/login' ? '/' : from;
+    let redirectPath = from.pathname === '/login' ? '/' : from;
+    if ((redirectPath === '/' || redirectPath.pathname === '/') && params.tooljetId) {
+      if (redirectPath.pathname) {
+        // redirectPath.pathname = `${redirectPath.pathname}?tooljetId=${params.tooljetId}&mode=${params.mode}`
+        redirectPath.search = `?tooljetId=${params.tooljetId}&mode=${params.mode}`;
+      } else {
+        redirectPath = `${redirectPath}?tooljetId=${params.tooljetId}&mode=${params.mode}`;
+      }
+    }
+    // console.log('redirectPath-------', redirectPath)
     // let _self = this;
     // if (redirectPath === '/') {
     //   appService
