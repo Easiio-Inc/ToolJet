@@ -55,6 +55,7 @@ async function bootstrap() {
       directives: {
         upgradeInsecureRequests: null,
         'img-src': ['*', 'data:', 'blob:'],
+        'media-src': ['*', 'data:', 'blob:'],
         'script-src': [
           'maps.googleapis.com',
           'apis.google.com',
