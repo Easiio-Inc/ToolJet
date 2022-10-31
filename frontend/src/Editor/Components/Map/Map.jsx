@@ -132,7 +132,28 @@ export const Map = function Map({
     },
     [setMapCenter]
   );
-
+  registerAction(
+    'setMarkers',
+    async function (lat, lng, key, label) {
+      if (lat && lng) {
+        const newMarkers = markers;
+        newMarkers.push({ lat: Number(lat), lng: Number(lng), key, label });
+        setMarkers(newMarkers);
+        onComponentOptionChanged(component, 'markers', newMarkers).then(() => onEvent('onCreateMarker', { component }));
+      }
+    },
+    [setMarkers]
+  );
+  registerAction(
+    'clearMarkers',
+    async function () {
+      const newMarkers = [];
+      setMarkers(newMarkers);
+      onComponentOptionChanged(component, 'markers', newMarkers).then(() => onEvent('onCreateMarker', { component }));
+    },
+    [setMarkers]
+  );
+  // console.log('window.public_config', window.public_config.GOOGLE_MAPS_API_KEY)
   return (
     <div
       data-disabled={parsedDisabledState}
@@ -152,7 +173,11 @@ export const Map = function Map({
       >
         <img className="mx-2" src="assets/images/icons/marker.svg" width="24" height="64" />
       </div>
-      <LoadScript googleMapsApiKey={window.public_config.GOOGLE_MAPS_API_KEY} libraries={['places']}>
+      {/* AIzaSyCA_O-7FkM8RuPV2U4V4UBl0oCf6pDYPUA */}
+      <LoadScript
+        googleMapsApiKey={'AIzaSyCA_O-7FkM8RuPV2U4V4UBl0oCf6pDYPUA' || window.public_config.GOOGLE_MAPS_API_KEY}
+        libraries={['places']}
+      >
         <GoogleMap
           center={mapCenter}
           mapContainerStyle={containerStyle}

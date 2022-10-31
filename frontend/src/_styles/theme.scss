@@ -757,6 +757,7 @@ button {
         margin: 0px auto;
         background-size: 80px 80px;
         background-repeat: repeat;
+        min-height: 100vh !important;
       }
     }
   }

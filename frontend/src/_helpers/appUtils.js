@@ -345,7 +345,7 @@ export const executeAction = (_ref, event, mode, customVariables) => {
 
 export async function onEvent(_ref, eventName, options, mode = 'edit') {
   let _self = _ref;
-  console.log('Event: ', eventName);
+  // console.log('Event: ', eventName);
 
   const { customVariables } = options;
 
