@@ -73,7 +73,12 @@ class App extends React.Component {
   render() {
     const { updateAvailable, onboarded, darkMode } = this.state;
     let toastOptions = {};
-
+    if (window.public_config && config) {
+      window.public_config = {
+        ...window.public_config,
+        ...config,
+      };
+    }
     if (darkMode) {
       toastOptions = {
         className: 'toast-dark-mode',

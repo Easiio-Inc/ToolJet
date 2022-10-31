@@ -38,7 +38,7 @@ export const BlankPage = function BlankPage({
               <p className={`empty-title ${darkMode && 'text-white-50'}`} data-cy="empty-description">
                 {t(
                   'blankPage.getStartedCreateNewApp',
-                  'You can get started by creating a new application or by creating an application using a template in Easiio Library.'
+                  'You can get started by creating a new application or by creating an application using a template in sflow.io Library.'
                 )}
               </p>
               <div className="empty-action">

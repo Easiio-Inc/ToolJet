@@ -155,7 +155,7 @@ class EditorComponent extends React.Component {
   }
 
   setWindowTitle(name) {
-    document.title = name ? `${name} - Easiio Sflow` : `Untitled App - Easiio Sflow`;
+    document.title = name ? `${name} - sflow.io` : `Untitled App - sflow.io`;
   }
 
   componentDidMount() {
