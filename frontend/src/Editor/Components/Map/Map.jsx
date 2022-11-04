@@ -3,6 +3,7 @@ import { GoogleMap, LoadScript, Marker, Autocomplete } from '@react-google-maps/
 import { resolveReferences, resolveWidgetFieldValue } from '@/_helpers/utils';
 import { darkModeStyles } from './styles';
 import { useTranslation } from 'react-i18next';
+import config from 'config';
 
 export const Map = function Map({
   id,
@@ -153,7 +154,6 @@ export const Map = function Map({
     },
     [setMarkers]
   );
-  // console.log('window.public_config', window.public_config.GOOGLE_MAPS_API_KEY)
   return (
     <div
       data-disabled={parsedDisabledState}
@@ -173,11 +173,7 @@ export const Map = function Map({
       >
         <img className="mx-2" src="assets/images/icons/marker.svg" width="24" height="64" />
       </div>
-      {/* AIzaSyCA_O-7FkM8RuPV2U4V4UBl0oCf6pDYPUA */}
-      <LoadScript
-        googleMapsApiKey={'AIzaSyCA_O-7FkM8RuPV2U4V4UBl0oCf6pDYPUA' || window.public_config.GOOGLE_MAPS_API_KEY}
-        libraries={['places']}
-      >
+      <LoadScript googleMapsApiKey={config.GOOGLE_MAPS_API_KEY} libraries={['places']}>
         <GoogleMap
           center={mapCenter}
           mapContainerStyle={containerStyle}

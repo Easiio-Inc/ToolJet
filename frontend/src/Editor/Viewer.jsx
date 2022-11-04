@@ -228,6 +228,38 @@ class ViewerComponent extends React.Component {
       dataQueries,
       queryConfirmationList,
     } = this.state;
+    let projectName = '';
+    let isHideHeader = false;
+    if (
+      this.props.location.search &&
+      typeof this.props.location.search === 'string' &&
+      this.props.location.search.length > 1
+    ) {
+      let searchText = this.props.location?.search.slice(1);
+      const paramsArr = searchText.split('&');
+      const paramsObj = {};
+      paramsArr.forEach((param) => {
+        if (typeof param === 'string' && param.indexOf('=')) {
+          const paramArr = param.split('=');
+          paramsObj[paramArr[0]] = paramArr[1];
+        }
+      });
+      if (paramsObj.hideHeader && paramsObj.hideHeader !== 'undefined') {
+        isHideHeader = true;
+      }
+      try {
+        projectName = decodeURIComponent(paramsObj.projectName, true);
+      } catch (error) {
+        try {
+          projectName = decodeURI(paramsObj.projectName);
+        } catch (error) {
+          projectName = paramsObj.projectName;
+        }
+      }
+    }
+    if (projectName === 'undefined') {
+      projectName = '';
+    }
     if (this.state.app?.is_maintenance_on) {
       return (
         <div className="maintenance_container">
@@ -250,14 +282,19 @@ class ViewerComponent extends React.Component {
             key={queryConfirmationList[0]?.queryName}
           />
           <DndProvider backend={HTML5Backend}>
-            {!appDefinition.globalSettings?.hideHeader && isAppLoaded && (
+            {!appDefinition.globalSettings?.hideHeader && isAppLoaded && !projectName && !isHideHeader && (
               <div className="header">
                 <header className="navbar navbar-expand-md navbar-light d-print-none">
                   <div className="container-xl header-container">
-                    <h1 className="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0">
-                      <Link to="/" data-cy="viewer-page-logo">
+                    <h1
+                      className="navbar-brand navbar-brand-autodark d-none-navbar-horizontal pe-0"
+                      style={{ position: 'relative' }}
+                    >
+                      {/* <Link to="/" data-cy="viewer-page-logo">
                         <LogoIcon />
-                      </Link>
+                      </Link> */}
+                      <LogoIcon />
+                      <div style={{ marginLeft: '10px' }}>{projectName}</div>
                     </h1>
                     {this.state.app && <span>{this.state.app.name}</span>}
                     <div className="d-flex align-items-center m-1 p-1">

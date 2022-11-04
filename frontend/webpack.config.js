@@ -151,6 +151,7 @@ module.exports = {
       COMMENT_FEATURE_ENABLE: true,
       ENABLE_MULTIPLAYER_EDITING: true,
       API_KEY: process.env.API_KEY,
+      GOOGLE_MAPS_API_KEY: process.env.GOOGLE_MAPS_API_KEY,
       TOOLJET_HOST: API_URL[environment]
     }),
   },

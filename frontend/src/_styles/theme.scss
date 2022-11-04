@@ -3972,7 +3972,15 @@ input[type="text"] {
   // .list-item {
   // }
 }
+.list-item {
+  cursor: pointer;
+  user-select: none;
+}
 
+.list-item .react-draggable {
+  cursor: pointer !important;
+  user-select: none;
+}
 .jet-listview::-webkit-scrollbar-track {
   background: transparent;
 }
